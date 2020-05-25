@@ -1,3 +1,4 @@
+import time
 from tkinter import *
 from mathsfunlib.qgenerator import generate_questions
 from mathsfunlib.qgenerator import QType
@@ -48,8 +49,11 @@ class QuizScreen(object):
         self.update_timer()
         self.question = self.next_question()
         self.frame.after(1000, self.tick_timer)
+        self.start_time = int(time.time())
+        self.end_time = None
 
     def end(self):
+        self.end_time = int(time.time())
         self.ended = True
         print("RESULT:")
         print(self.results)
@@ -124,6 +128,9 @@ class QuizScreen(object):
 
     def get_results(self):
         return self.results
+
+    def get_duration(self):
+        return self.end_time - self.start_time
 
 
 if __name__ == '__main__':

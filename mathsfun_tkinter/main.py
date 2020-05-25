@@ -10,7 +10,8 @@ screen = Tk()
 
 def on_quiz_close(qs):
     results = qs.get_results()
-    ResultsScreen(screen, results)
+    duration = qs.get_duration()
+    ResultsScreen(screen, results, duration)
 
 
 def on_config_close(cs):

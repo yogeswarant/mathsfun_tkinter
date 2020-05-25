@@ -1,4 +1,5 @@
 from tkinter import *
+from datetime import timedelta
 
 SCREEN_GEOMETRY = "1200x800"
 RESULT_BASE_X = 20
@@ -7,12 +8,13 @@ MAX_ROW_COUNT = 25
 
 
 class ResultsScreen(object):
-    def __init__(self, parent, results):
+    def __init__(self, parent, results, duration):
         self.screen = parent
         self.screen.geometry(SCREEN_GEOMETRY)
         self.frame = Frame(parent, width=1200, height=800)
         self.frame.place(x=0, y=0)
         self.results = results
+        self.duration = duration
         self.header_label = Label(self.frame, text="Speed Test Result", font="Verdana 30 bold")
         self.header_label.place(x=5, y=5)
         self.summaryvar = StringVar()
@@ -59,7 +61,8 @@ class ResultsScreen(object):
             status_label.place(x=x + ((iw + qw + yw) * 10), y=y)
             print("{}. {}".format(index, result))
 
-        self.summaryvar.set("Total: {}  Correct: {} Wrong: {}".format(correct+wrong, correct, wrong))
+        self.summaryvar.set("Duration: {} Total: {}  Correct: {} Wrong: {}".format(
+            str(timedelta(seconds=self.duration)), correct+wrong, correct, wrong))
 
 
 if __name__ == '__main__':
@@ -73,5 +76,5 @@ if __name__ == '__main__':
      {'question': '8 x _= 16', 'answer': 2, 'your_answer': '2', 'status': 'Correct'}] * 8
 
     screen = Tk()
-    rs = ResultsScreen(screen, r)
+    rs = ResultsScreen(screen, r, duration=120)
     screen.mainloop()
