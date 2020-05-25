@@ -133,6 +133,7 @@ class ConfigScreen(object):
     def select_all(self):
         for i in range(12):
             self.tables[i].set(self.all_tables.get())
+        self.total_questions.set(len(self.get_select_tables()) * 10)
 
     def get_select_tables(self):
         selected_tables = []

@@ -17,7 +17,8 @@ def on_config_close(cs):
     print("On config close")
     question_generator = generate_questions(cs.get_select_tables(), cs.get_selected_operations(), cs.get_total_questions())
     timeout_seconds = cs.get_timer()
-    QuizScreen(screen, question_generator, timeout_seconds, on_quiz_close)
+    total_questions = cs.get_total_questions()
+    QuizScreen(screen, question_generator, total_questions, timeout_seconds, on_quiz_close)
 
 
 def main():

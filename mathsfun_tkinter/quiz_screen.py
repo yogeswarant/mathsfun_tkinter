@@ -63,7 +63,7 @@ class QuizScreen(object):
                                                                                    self.correct,
                                                                                    self.wrong))
 
-    def answer(self, event):
+    def check_answer(self):
         print("ANS")
         answer = self.answervar.get()
         status = "Wrong"
@@ -78,6 +78,10 @@ class QuizScreen(object):
                              'status': status})
         self.answervar.set('')
         self.aentry.focus_set()
+
+    def answer(self, event):
+        self.check_answer()
+        self.next_question()
 
     def numinput(self, P):
         if str.isdigit(P) or P == "":
@@ -107,7 +111,8 @@ class QuizScreen(object):
 
         print("Tick")
         if self.remaining_seconds == 1:
-            self.answer(None)
+            self.check_answer()
+            # self.answer(None)
             self.update_status()
             self.next_question()
         else:
