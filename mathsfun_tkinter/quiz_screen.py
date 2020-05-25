@@ -42,7 +42,7 @@ class QuizScreen(object):
         self.on_close = on_close
         self.statusvar = StringVar()
         self.status_label = Label(self.frame, textvar=self.statusvar)
-        self.status_label.place(x=300, y=400)
+        self.status_label.place(x=250, y=400)
         self.correct = 0
         self.wrong = 0
 
@@ -79,11 +79,14 @@ class QuizScreen(object):
             return False
 
     def next_question(self):
-        print("NQ")
-        self.question = next(self.question_generator)
-        self.questionvar.set(self.question.get_question())
-        self.remaining_seconds = self.timeout_seconds
-        return self.question
+        try:
+            print("NQ")
+            self.question = next(self.question_generator)
+            self.questionvar.set(self.question.get_question())
+            self.remaining_seconds = self.timeout_seconds
+            return self.question
+        except StopIteration:
+            self.end()
 
     def tick_timer(self):
         if self.ended:
