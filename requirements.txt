@@ -1,1 +1,1 @@
-mathsfunlib==0.0.1
+mathsfunlib==0.0.2
