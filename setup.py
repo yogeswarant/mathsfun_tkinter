@@ -21,6 +21,6 @@ setuptools.setup(
     install_requires=['mathsfunlib'],
     python_requires='>=3.6',
     entry_points={
-        'console_scripts': ['maths-speed-test-tk=src.main:main'],
+        'console_scripts': ['maths-speed-test-tk=mathsfun_tkinter.main:main'],
     }
 )
