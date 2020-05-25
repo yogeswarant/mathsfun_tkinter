@@ -21,13 +21,7 @@ def on_config_close(cs):
 
 
 def main():
-    global cs
-    global qs
-    global rs
-
-    cs = ConfigScreen(screen, on_config_close)
-    # qs = QuizScreen()
-    # rs = ResultsScreen()
+    ConfigScreen(screen, on_config_close)
     screen.mainloop()
 
 
