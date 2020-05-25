@@ -40,6 +40,11 @@ class QuizScreen(object):
         self.results = []
         self.ended = False
         self.on_close = on_close
+        self.statusvar = StringVar()
+        self.status_label = Label(self.frame, textvar=self.statusvar)
+        self.status_label.place(x=300, y=400)
+        self.correct = 0
+        self.wrong = 0
 
     def end(self):
         self.ended = True
@@ -53,6 +58,9 @@ class QuizScreen(object):
         status = "Wrong"
         if answer and int(answer) == self.question.get_answer():
             status = "Correct"
+            self.correct += 1
+        else:
+            self.wrong += 1
         self.results.append({'question': self.question.get_question(),
                              'answer': self.question.get_answer(),
                              'your_answer': answer,
@@ -60,6 +68,9 @@ class QuizScreen(object):
         self.answervar.set('')
         self.next_question()
         self.aentry.focus_set()
+        self.statusvar.set("Total: {} Correct: {} Wrong: {}".format(self.correct+self.wrong,
+                                                                    self.correct,
+                                                                    self.wrong))
 
     def numinput(self, P):
         if str.isdigit(P) or P == "":
@@ -94,6 +105,7 @@ class QuizScreen(object):
 
 
 if __name__ == '__main__':
+    screen = Tk()
     qgen = generate_questions([1, 2], [QType.MULTIPLICATION, QType.XMULTIPLICATION])
-    qs = QuizScreen(qgen, 10)
-    qs.show()
+    qs = QuizScreen(screen, qgen, 10, lambda x: screen.destroy())
+    screen.mainloop()
