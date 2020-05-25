@@ -70,7 +70,7 @@ class ConfigScreen(object):
 
         start = Button(self.frame, text="Start", command=self.start)
         start.place(x=210, y=300)
-        
+
         self.table_selected()
 
     def start(self):

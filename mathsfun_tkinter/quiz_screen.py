@@ -7,7 +7,7 @@ SCREEN_GEOMETRY = "500x500"
 
 class QuizScreen(object):
 
-    def __init__(self, parent, question_generator, timeout_seconds, on_close):
+    def __init__(self, parent, question_generator, total_questions, timeout_seconds, on_close):
         print("{} {}".format(question_generator, timeout_seconds))
         self.screen = parent
         self.screen.geometry(SCREEN_GEOMETRY)
@@ -15,6 +15,7 @@ class QuizScreen(object):
         self.frame = Frame(parent, width=500, height=500)
         self.frame.place(x=0, y=0)
         self.question_generator = question_generator
+        self.total_questions = total_questions
         self.qlabel = None
         self.timervar = StringVar()
         self.questionvar = StringVar()
@@ -35,22 +36,32 @@ class QuizScreen(object):
         self.end_button.place(x=20, y=400)
         self.timeout_seconds = timeout_seconds
         self.remaining_seconds = self.timeout_seconds
-        self.frame.after(1000, self.tick_timer)
-        self.question = self.next_question()
         self.results = []
         self.ended = False
         self.on_close = on_close
         self.statusvar = StringVar()
         self.status_label = Label(self.frame, textvar=self.statusvar)
-        self.status_label.place(x=250, y=400)
+        self.status_label.place(x=150, y=400)
         self.correct = 0
         self.wrong = 0
+        self.update_status()
+        self.update_timer()
+        self.question = self.next_question()
+        self.frame.after(1000, self.tick_timer)
 
     def end(self):
         self.ended = True
         print("RESULT:")
         print(self.results)
         self.on_close(self)
+
+    def update_status(self):
+        so_far = self.correct + self.wrong
+        remaining = self.total_questions - so_far
+        self.statusvar.set("So far: {} Remaining: {} Correct: {} Wrong: {}".format(so_far,
+                                                                                   remaining,
+                                                                                   self.correct,
+                                                                                   self.wrong))
 
     def answer(self, event):
         print("ANS")
@@ -67,10 +78,6 @@ class QuizScreen(object):
                              'status': status})
         self.answervar.set('')
         self.aentry.focus_set()
-        self.statusvar.set("Total: {} Correct: {} Wrong: {}".format(self.correct+self.wrong,
-                                                                    self.correct,
-                                                                    self.wrong))
-        self.next_question()
 
     def numinput(self, P):
         if str.isdigit(P) or P == "":
@@ -88,19 +95,25 @@ class QuizScreen(object):
         except StopIteration:
             self.end()
 
+    def update_timer(self):
+        timer = "{} second remaining".format(self.remaining_seconds)
+        timer = timer.rjust(20)
+        self.timervar.set('')
+        self.timervar.set(timer)
+
     def tick_timer(self):
         if self.ended:
             return
 
         print("Tick")
-        timer = "{} second remaining".format(self.remaining_seconds)
-        timer = timer.rjust(20)
         if self.remaining_seconds == 1:
+            self.answer(None)
+            self.update_status()
             self.next_question()
         else:
             self.remaining_seconds -= 1
-        self.timervar.set('')
-        self.timervar.set(timer)
+
+        self.update_timer()
         self.frame.after(1000, self.tick_timer)
 
     def get_results(self):
@@ -109,6 +122,6 @@ class QuizScreen(object):
 
 if __name__ == '__main__':
     screen = Tk()
-    qgen = generate_questions([1, 2], [QType.MULTIPLICATION, QType.XMULTIPLICATION])
-    qs = QuizScreen(screen, qgen, 10, lambda x: screen.destroy())
+    qgen = generate_questions([1, 2], [QType.MULTIPLICATION, QType.XMULTIPLICATION], total_questions=5)
+    qs = QuizScreen(screen, qgen, total_questions=5, timeout_seconds=5, on_close=lambda x: screen.destroy())
     screen.mainloop()
