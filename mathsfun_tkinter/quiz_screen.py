@@ -81,6 +81,7 @@ class QuizScreen(object):
 
     def answer(self, event):
         self.check_answer()
+        self.update_status()
         self.next_question()
 
     def numinput(self, P):

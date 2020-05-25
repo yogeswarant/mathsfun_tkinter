@@ -35,9 +35,9 @@ class ResultsScreen(object):
                 question_bg = "yellow"
                 your_answer_bg = "yellow"
                 status_bg = "red"
-                correct += 1
-            else:
                 wrong += 1
+            else:
+                correct += 1
 
             print("index={} x={} y={}".format(index, x, y))
             iw = 3
