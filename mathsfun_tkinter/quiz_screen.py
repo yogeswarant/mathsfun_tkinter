@@ -66,11 +66,11 @@ class QuizScreen(object):
                              'your_answer': answer,
                              'status': status})
         self.answervar.set('')
-        self.next_question()
         self.aentry.focus_set()
         self.statusvar.set("Total: {} Correct: {} Wrong: {}".format(self.correct+self.wrong,
                                                                     self.correct,
                                                                     self.wrong))
+        self.next_question()
 
     def numinput(self, P):
         if str.isdigit(P) or P == "":
