@@ -9,10 +9,12 @@ SCREEN_GEOMETRY = "500x400"
 
 class ConfigScreen(object):
 
-    def __init__(self):
-        self.screen = Tk()
+    def __init__(self, parent, on_close):
+        self.screen = parent
         self.screen.geometry(SCREEN_GEOMETRY)
         self.screen.title("Maths speed test - Config")
+        self.frame = Frame(parent, width=500, height=400)
+        self.frame.place(x=0, y=0)
         self.multiplication = IntVar()
         self.division = IntVar()
         self.addition = IntVar()
@@ -24,41 +26,42 @@ class ConfigScreen(object):
         self.timer = StringVar()
         self.digits = IntVar()
         self.multiplication.set(1)
+        self.on_close = on_close
 
-        mul = Checkbutton(self.screen, text='Multiplication', variable=self.multiplication,
+        mul = Checkbutton(self.frame, text='Multiplication', variable=self.multiplication,
                           onvalue=1, offvalue=0)
         mul.place(x=20, y=FIRST_SECTION_Y, height=25)
-        div = Checkbutton(self.screen, text='Division', variable=self.division, onvalue=1,
+        div = Checkbutton(self.frame, text='Division', variable=self.division, onvalue=1,
                           offvalue=0)
         div.place(x=140, y=FIRST_SECTION_Y, height=25)
-        add = Checkbutton(self.screen, text='Addition', variable=self.addition,
+        add = Checkbutton(self.frame, text='Addition', variable=self.addition,
                           onvalue=1, offvalue=0)
         add.place(x=240, y=FIRST_SECTION_Y, height=25)
-        sub = Checkbutton(self.screen, text='Subtraction', variable=self.subtraction,
+        sub = Checkbutton(self.frame, text='Subtraction', variable=self.subtraction,
                           onvalue=1, offvalue=0)
         sub.place(x=320, y=FIRST_SECTION_Y, height=25)
 
-        all_ops = Checkbutton(self.screen, text='All', variable=self.all_operations,
+        all_ops = Checkbutton(self.frame, text='All', variable=self.all_operations,
                               onvalue=1, offvalue=0, command=self.select_all_operations)
         all_ops.place(x=430, y=FIRST_SECTION_Y, height=25)
 
         self.show_tables()
 
-        digits_label = Label(text="Select digits:")
+        digits_label = Label(self.frame, text="Select digits:")
         digits_label.place(x=220, y=SECOND_SECTION_Y)
         self.digits.set(3)
         supported_digits = ["{}".format(x) for x in range(1, 6)]
-        digits_option = OptionMenu(self.screen, self.digits, *supported_digits)
+        digits_option = OptionMenu(self.frame, self.digits, *supported_digits)
         digits_option.place(x=230, y=THIRD_SECTION_Y)
 
-        qtime_label = Label(text="Select time:")
+        qtime_label = Label(self.frame, text="Select time:")
         qtime_label.place(x=330, y=SECOND_SECTION_Y)
         self.timer.set('10 Seconds')
         supported_timer = ["{} Seconds".format(x) for x in range(5, 16)]
-        timer_option = OptionMenu(self.screen, self.timer, *supported_timer)
+        timer_option = OptionMenu(self.frame, self.timer, *supported_timer)
         timer_option.place(x=330, y=THIRD_SECTION_Y)
 
-        start = Button(self.screen, text="Start", command=self.start)
+        start = Button(self.frame, text="Start", command=self.start)
         start.place(x=210, y=300)
 
     def start(self):
@@ -66,6 +69,7 @@ class ConfigScreen(object):
         print(self.get_selected_operations())
         print(self.get_digits())
         print(self.get_timer())
+        self.on_close(self)
 
     def select_all_operations(self):
         if self.all_operations.get():
@@ -88,7 +92,7 @@ class ConfigScreen(object):
     def show_tables(self):
         basex = 30
         basey = SECOND_SECTION_Y
-        Label(text="Select tables:").place(x=basey, y=SECOND_SECTION_Y)
+        Label(self.frame, text="Select tables:").place(x=basey, y=SECOND_SECTION_Y)
         basex += 30
         basey = THIRD_SECTION_Y
         for i in range(12):
@@ -96,14 +100,14 @@ class ConfigScreen(object):
             self.tables.append(table_selection)
             if i < 5:
                 table_selection.set(1)
-            table_check = Checkbutton(self.screen, text='{}'.format(i + 1),
+            table_check = Checkbutton(self.frame, text='{}'.format(i + 1),
                                       variable=self.tables[i], onvalue=1, offvalue=0)
 
             x = basex + ((i % 3)*50)
             y = basey + (int(i / 3) * 30)
             table_check.place(x=x, y=y)
 
-        table_check = Checkbutton(self.screen, text='All tables',
+        table_check = Checkbutton(self.frame, text='All tables',
                                   variable=self.all_tables,
                                   command=self.select_all)
         all_y = y + 30
@@ -129,10 +133,12 @@ class ConfigScreen(object):
             operations.extend([QType.DIVISION, QType.XDIVISION])
         return operations
 
-    def show(self):
-        self.screen.mainloop()
+
+def on_close(x):
+    print("Close")
 
 
 if __name__ == '__main__':
-    cs = ConfigScreen()
-    cs.show()
+    screen = Tk()
+    cs = ConfigScreen(screen, on_close)
+    screen.mainloop()

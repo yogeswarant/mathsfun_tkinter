@@ -7,11 +7,13 @@ MAX_ROW_COUNT = 25
 
 
 class ResultsScreen(object):
-    def __init__(self, results):
-        self.screen = Tk()
+    def __init__(self, parent, results):
+        self.screen = parent
         self.screen.geometry(SCREEN_GEOMETRY)
+        self.frame = Frame(parent, width=1200, height=800)
+        self.frame.place(x=0, y=0)
         self.results = results
-        self.header_label = Label(text="Speed Test Result", font="Verdana 30 bold")
+        self.header_label = Label(self.frame, text="Speed Test Result", font="Verdana 30 bold")
         self.header_label.place(x=5, y=5)
         self.show_results()
 
@@ -21,26 +23,23 @@ class ResultsScreen(object):
             y = RESULT_BASE_Y + ((index % MAX_ROW_COUNT) * 25)
             print("index={} x={} y={}".format(index, x, y))
             iw = 3
-            index_label = Label(text="{}.".format(index + 1), width=iw, height=1, bg="red")
+            index_label = Label(self.frame, text="{}.".format(index + 1), width=iw, height=1, bg="red")
             index_label.place(x=x, y=y)
 
             qw = 10
             qtext = result['question'].replace('_', str(result['answer']))
-            question_label = Label(text=qtext, width=qw, height=1, bg="green")
+            question_label = Label(self.frame, text=qtext, width=qw, height=1, bg="green")
             question_label.place(x=x + (iw * 10), y=y)
 
             yw = 12
             your_answer_text = "Your answer: {}".format(result['your_answer'])
-            your_answer_label = Label(text=your_answer_text, width=yw, height=1, bg="yellow")
+            your_answer_label = Label(self.frame, text=your_answer_text, width=yw, height=1, bg="yellow")
             your_answer_label.place(x=x + ((iw + qw) * 10), y=y)
 
             sw = 6
-            status_label = Label(text=result['status'], width=sw, height=1, bg="cyan")
+            status_label = Label(self.frame, text=result['status'], width=sw, height=1, bg="cyan")
             status_label.place(x=x + ((iw + qw + yw) * 10), y=y)
             print("{}. {}".format(index, result))
-
-    def show(self):
-        self.screen.mainloop()
 
 
 if __name__ == '__main__':

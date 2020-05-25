@@ -7,40 +7,45 @@ SCREEN_GEOMETRY = "500x500"
 
 class QuizScreen(object):
 
-    def __init__(self, question_generator, timeout_seconds):
-        self.screen = Tk()
+    def __init__(self, parent, question_generator, timeout_seconds, on_close):
+        print("{} {}".format(question_generator, timeout_seconds))
+        self.screen = parent
         self.screen.geometry(SCREEN_GEOMETRY)
         self.screen.title("Maths speed test")
+        self.frame = Frame(parent, width=500, height=500)
+        self.frame.place(x=0, y=0)
         self.question_generator = question_generator
         self.qlabel = None
         self.timervar = StringVar()
         self.questionvar = StringVar()
         self.answervar = StringVar()
-        self.timer_label = Label(textvar=self.timervar, width=20)
-        self.question_label = Label(textvar=self.questionvar, font="Verdana 36 bold", width=10)
+        self.timer_label = Label(self.frame, textvar=self.timervar, width=20)
+        self.question_label = Label(self.frame, textvar=self.questionvar, font="Verdana 36 bold", width=10)
         self.timer_label.place(x=320, y=50)
         self.question_label.place(x=100, y=100)
-        self.aentry = Entry(textvar=self.answervar, validate='all',
-                            validatecommand=(self.screen.register(self.numinput), '%P'),
+        self.aentry = Entry(self.frame, textvar=self.answervar, validate='all',
+                            validatecommand=(self.frame.register(self.numinput), '%P'),
                             font="Verdana 36 bold", width=6)
         self.aentry.bind('<Return>', self.answer)
         self.aentry.place(x=100, y=200)
         self.aentry.focus_set()
-        self.abutton = Button(text="Answer", width=8, height=3, command=lambda: self.answer(None))
+        self.abutton = Button(self.frame, text="Answer", width=8, height=3, command=lambda: self.answer(None))
         self.abutton.place(x=300, y=200)
-        self.end_button = Button(text="End", width=8, height=3, command=self.end)
+        self.end_button = Button(self.frame, text="End", width=8, height=3, command=self.end)
         self.end_button.place(x=20, y=400)
         self.timeout_seconds = timeout_seconds
         self.remaining_seconds = self.timeout_seconds
-        self.screen.after(1000, self.tick_timer)
+        self.frame.after(1000, self.tick_timer)
         self.question = self.next_question()
         self.results = []
         self.ended = False
+        self.on_close = on_close
 
     def end(self):
         self.ended = True
         print("RESULT:")
         print(self.results)
+        self.on_close(self)
 
     def answer(self, event):
         print("ANS")
@@ -82,13 +87,10 @@ class QuizScreen(object):
             self.remaining_seconds -= 1
         self.timervar.set('')
         self.timervar.set(timer)
-        self.screen.after(1000, self.tick_timer)
+        self.frame.after(1000, self.tick_timer)
 
     def get_results(self):
         return self.results
-
-    def show(self):
-        self.screen.mainloop()
 
 
 if __name__ == '__main__':
