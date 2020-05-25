@@ -60,12 +60,9 @@ class QuizScreen(object):
         self.on_close(self)
 
     def update_status(self):
-        so_far = self.correct + self.wrong
-        remaining = self.total_questions - so_far
-        self.statusvar.set("So far: {} Remaining: {} Correct: {} Wrong: {}".format(so_far,
-                                                                                   remaining,
-                                                                                   self.correct,
-                                                                                   self.wrong))
+        remaining = self.total_questions - (self.correct + self.wrong)
+        self.statusvar.set("Remaining: {} Correct: {} Wrong: {}".format(remaining, self.correct,
+                                                                        self.wrong))
 
     def check_answer(self):
         print("ANS")
