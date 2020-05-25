@@ -25,6 +25,7 @@ class ConfigScreen(object):
         self.table_options = False
         self.timer = StringVar()
         self.digits = IntVar()
+        self.total_questions = IntVar()
         self.multiplication.set(1)
         self.on_close = on_close
 
@@ -61,8 +62,16 @@ class ConfigScreen(object):
         timer_option = OptionMenu(self.frame, self.timer, *supported_timer)
         timer_option.place(x=330, y=THIRD_SECTION_Y)
 
+        total_questions_label = Label(self.frame, text="Total questions:")
+        total_questions_label.place(x=220, y=SECOND_SECTION_Y + 80)
+        self.total_questions.set(10)
+        total_questions_option = OptionMenu(self.frame, self.total_questions, *list(range(10, 121)))
+        total_questions_option.place(x=220, y=THIRD_SECTION_Y + 80)
+
         start = Button(self.frame, text="Start", command=self.start)
         start.place(x=210, y=300)
+        
+        self.table_selected()
 
     def start(self):
         print(self.get_select_tables())
@@ -89,6 +98,13 @@ class ConfigScreen(object):
     def get_timer(self):
         return int(self.timer.get().split()[0])
 
+    def get_total_questions(self):
+        return self.total_questions.get()
+
+    def table_selected(self):
+        print("TABLE SELECTED")
+        self.total_questions.set(len(self.get_select_tables()) * 10)
+
     def show_tables(self):
         basex = 30
         basey = SECOND_SECTION_Y
@@ -101,7 +117,8 @@ class ConfigScreen(object):
             if i < 5:
                 table_selection.set(1)
             table_check = Checkbutton(self.frame, text='{}'.format(i + 1),
-                                      variable=self.tables[i], onvalue=1, offvalue=0)
+                                      variable=self.tables[i], onvalue=1, offvalue=0,
+                                      command=self.table_selected)
 
             x = basex + ((i % 3)*50)
             y = basey + (int(i / 3) * 30)
