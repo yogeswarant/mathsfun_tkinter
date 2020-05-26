@@ -65,7 +65,7 @@ class ConfigScreen(object):
         total_questions_label = Label(self.frame, text="Total questions:")
         total_questions_label.place(x=220, y=SECOND_SECTION_Y + 80)
         self.total_questions.set(10)
-        total_questions_option = OptionMenu(self.frame, self.total_questions, *list(range(10, 121)))
+        total_questions_option = OptionMenu(self.frame, self.total_questions, *list(range(10, 121, 10)))
         total_questions_option.place(x=220, y=THIRD_SECTION_Y + 80)
 
         start = Button(self.frame, text="Start", command=self.start)

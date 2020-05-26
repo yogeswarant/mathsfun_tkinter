@@ -47,7 +47,7 @@ class ResultsScreen(object):
             index_label.place(x=x, y=y)
 
             qw = 10
-            qtext = result['question'].replace('_', str(result['answer']))
+            qtext = result['question']
             question_label = Label(self.frame, text=qtext, width=qw, height=1, bg=question_bg)
             question_label.place(x=x + (iw * 10), y=y)
 
